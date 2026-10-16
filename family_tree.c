@@ -78,6 +78,11 @@ void read_person_info(const char *role, char *name_out, int *age_out) {
     getchar(); /* Consume the newline after the age. */
 }
 
+void free_family_tree(Person *people[], int count) {
+    for (int i = 0; i < count; i++) {
+        free(people[i]);
+    }
+}
 int main(void) {
     char name[50];
     int age;
@@ -113,9 +118,7 @@ link_parents(people[6], people[4], people[5]);
 print_family_relationships(people[6]);
 
 /* Free allocated memory after printing. */
-for (int i = 0; i < 7; i++) {
-    free(people[i]);
-}
+free_family_tree(people, 7);
 
 return 0;
 }
