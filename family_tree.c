@@ -26,12 +26,53 @@ Person* create_person(const char *name, int age) {
     return p;
 }
 
+void read_person_info(const char *role, char *name_out, int *age_out) {
+    printf("Enter name for %s: ", role);
+
+    if (fgets(name_out, 50, stdin) == NULL) {
+        printf("Input error.\n");
+        exit(EXIT_FAILURE);
+    }
+
+    name_out[strcspn(name_out, "\n")] = '\0';
+
+    printf("Enter age for %s: ", role);
+
+    if (scanf("%d", age_out) != 1 || *age_out < 0) {
+        printf("Invalid age.\n");
+        exit(EXIT_FAILURE);
+    }
+
+    getchar(); /* Consume the newline after the age. */
+}
+
 int main(void) {
-    Person *test = create_person("Vipul", 20);
+    char name[50];
+    int age;
 
-    printf("Name: %s\n", test->name);
-    printf("Age: %d\n", test->age);
+    Person *people[7];
+    const char *roles[7] = {
+        "Paternal Grandfather",
+        "Paternal Grandmother",
+        "Maternal Grandfather",
+        "Maternal Grandmother",
+        "Father",
+        "Mother",
+        "Yourself"
+    };
 
-    free(test);
+    for (int i = 0; i < 7; i++) {
+        read_person_info(roles[i], name, &age);
+        people[i] = create_person(name, age);
+        printf("Saved: %s, age %d\n\n", people[i]->name, people[i]->age);
+    }
+
+    printf("All seven family members have been recorded!\n");
+
+    for (int i = 0; i < 7; i++) {
+        free(people[i]);
+    }
+
     return 0;
 }
+
