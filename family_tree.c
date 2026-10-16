@@ -25,6 +25,38 @@ Person* create_person(const char *name, int age) {
 
     return p;
 }
+void link_parents(Person *child, Person *father, Person *mother) {
+        child->father = father;
+        child->mother = mother;     
+    }
+    void print_family_relationships(const Person *me) {
+    printf("\n=== FAMILY TREE RELATIONSHIPS ===\n");
+
+    printf("\n1. YOURSELF:\n");
+    printf("Name: %s | Age: %d\n", me->name, me->age);
+
+    printf("\n2. PARENTS:\n");
+    printf("Father: %s | Age: %d\n",
+           me->father->name, me->father->age);
+    printf("Mother: %s | Age: %d\n",
+           me->mother->name, me->mother->age);
+
+    printf("\n3. PATERNAL GRANDPARENTS:\n");
+    printf("Grandfather: %s | Age: %d\n",
+           me->father->father->name,
+           me->father->father->age);
+    printf("Grandmother: %s | Age: %d\n",
+           me->father->mother->name,
+           me->father->mother->age);
+
+    printf("\n4. MATERNAL GRANDPARENTS:\n");
+    printf("Grandfather: %s | Age: %d\n",
+           me->mother->father->name,
+           me->mother->father->age);
+    printf("Grandmother: %s | Age: %d\n",
+           me->mother->mother->name,
+           me->mother->mother->age);
+}
 
 void read_person_info(const char *role, char *name_out, int *age_out) {
     printf("Enter name for %s: ", role);
@@ -67,12 +99,24 @@ int main(void) {
         printf("Saved: %s, age %d\n\n", people[i]->name, people[i]->age);
     }
 
-    printf("All seven family members have been recorded!\n");
+    
+/* Connect father to paternal grandparents. */
+link_parents(people[4], people[0], people[1]);
 
-    for (int i = 0; i < 7; i++) {
-        free(people[i]);
-    }
+/* Connect mother to maternal grandparents. */
+link_parents(people[5], people[2], people[3]);
 
-    return 0;
+/* Connect yourself to your parents. */
+link_parents(people[6], people[4], people[5]);
+
+/* Display the complete family tree. */
+print_family_relationships(people[6]);
+
+/* Free allocated memory after printing. */
+for (int i = 0; i < 7; i++) {
+    free(people[i]);
+}
+
+return 0;
 }
 
